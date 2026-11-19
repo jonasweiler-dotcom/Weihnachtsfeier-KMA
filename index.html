@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a1530">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark">
+<title>Weihnachtliche Schnitzeljagd</title>
+<style>
+:root{color-scheme:dark;--gold:#ffd86b;--red:#c0392b;--green:#2e8b57;--ink:#0a1530;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{font-family:var(--font);color:#f4f7ff;line-height:1.45;
+  background:linear-gradient(#070f26 0%,#10224a 45%,#1c3a5f 100%);background-attachment:fixed;overflow-x:hidden}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+#stars i{position:absolute;background:#fff;border-radius:50%;animation:tw 3s infinite ease-in-out}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}
+#moon{position:fixed;top:7vh;right:8vw;width:70px;height:70px;border-radius:50%;z-index:0;
+  background:radial-gradient(circle at 35% 35%,#fffbe6,#f3e7a8 70%);box-shadow:0 0 40px 12px rgba(255,248,200,.35)}
+#forest{position:fixed;left:0;right:0;bottom:0;width:100%;height:42vh;z-index:1;pointer-events:none}
+.tl{animation:glow 2.4s infinite ease-in-out}
+@keyframes glow{0%,100%{opacity:.35}50%{opacity:1}}
+.tt{fill:#ffe27a;opacity:.5;transform-box:fill-box;transform-origin:center}
+.ttg{opacity:0;transform-box:fill-box;transform-origin:center}
+.ttw.on .tt{animation:tts 3.8s ease-in-out}
+.ttw.on .ttg{animation:ttg 3.8s ease-in-out}
+@keyframes tts{0%,100%{opacity:.5;transform:scale(1)}15%,75%{opacity:1;transform:scale(2.6) rotate(15deg)}45%{opacity:1;transform:scale(3.2) rotate(-10deg)}}
+@keyframes ttg{0%,100%{opacity:0;transform:scale(.3)}15%,75%{opacity:.95;transform:scale(2.2)}45%{opacity:1;transform:scale(3)}}
+.deco{position:fixed;z-index:1;font-size:34px;opacity:.55;animation:fl 6s infinite ease-in-out;pointer-events:none}
+@keyframes fl{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-14px) rotate(6deg)}}
+#lights{position:fixed;top:0;left:0;right:0;height:26px;z-index:9;display:flex;justify-content:space-around;pointer-events:none;
+  border-top:3px solid #1a1a1a}
+#lights i{width:10px;height:14px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;margin-top:3px;animation:glow 1.8s infinite}
+#lights.flash i{animation:lf .22s infinite alternate}
+@keyframes lf{from{opacity:.2;transform:scale(1)}to{opacity:1;transform:scale(1.9);box-shadow:0 0 14px 6px var(--c,#fff)}}
+#snow{position:fixed;inset:0;z-index:3;pointer-events:none}
+#pile{position:fixed;left:0;right:0;bottom:0;width:100%;height:40vh;z-index:4;pointer-events:none}
+main{position:relative;z-index:10;max-width:900px;margin:0 auto;padding:46px 10px 14vh}
+main.shake{animation:shk .3s}
+@keyframes shk{0%,100%{transform:none}25%{transform:translate(-6px,4px)}50%{transform:translate(5px,-3px)}75%{transform:translate(-3px,2px)}}
+h1,h2{font-weight:800;letter-spacing:-.01em;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+h1{font-size:clamp(26px,6vw,44px);text-align:center;margin:10px 0}
+h2{margin:6px 0 10px;font-size:28px}
+h2 small{font-size:16px;opacity:.7;font-weight:500}
+.card{background:rgba(9,18,44,.82);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);border:2px solid rgba(255,216,107,.6);
+  border-radius:22px;padding:24px 26px;box-shadow:0 10px 40px rgba(0,0,0,.45);margin:16px 0}
+.steps{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+.steps b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;
+  background:rgba(255,255,255,.12);color:#cdd8f5}
+.steps b.done{background:var(--green);color:#fff}
+.steps b.cur{background:var(--gold);color:var(--ink);box-shadow:0 0 12px var(--gold)}
+.letters{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin:8px 0 14px}
+.letters span{width:32px;height:38px;border-bottom:3px solid var(--gold);display:grid;place-items:center;
+  font:800 22px var(--font);color:var(--gold)}
+.info{font-size:14px;opacity:.88;margin:0 0 12px;line-height:1.5}
+ol.hints{list-style:none;padding:0;margin:0 0 14px}
+ol.hints li{background:rgba(255,255,255,.08);border-left:5px solid var(--gold);border-radius:12px;
+  padding:12px 16px;margin:8px 0;font-size:18px;line-height:1.45;animation:pop .5s}
+ol.hints li.emergency{border-left-color:#ff6b6b;background:rgba(255,107,107,.12)}
+ol.hints li em{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-style:normal;font-weight:700;margin-bottom:3px}
+ol.hints li.emergency em{color:#ff9b9b}
+ol.hints u{text-decoration-thickness:3px;text-decoration-color:var(--gold);text-underline-offset:4px}
+math.integral{display:block;font-size:2em;margin:.25em 0;text-align:center;color:#fff;
+  font-family:"Cambria Math","STIX Two Math","Latin Modern Math","Noto Sans Math",math,serif}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.att{font-size:14px;margin:6px 0 10px}
+form{display:flex;gap:10px;flex-wrap:wrap}
+input{flex:1 1 200px;font:inherit;font-size:18px;padding:13px 15px;border-radius:12px;border:2px solid #4a639e;
+  background:#fff;color:var(--ink);outline:none;min-width:0}
+input:focus{border-color:var(--gold)}
+button{font:inherit;font-size:17px;font-weight:600;cursor:pointer;border:0;border-radius:12px;padding:13px 22px;color:#fff;
+  background:linear-gradient(#d84a3a,#a52a1d);box-shadow:0 3px 0 #6e170e}
+button:active{transform:translateY(2px);box-shadow:none}
+button.alt{background:linear-gradient(#3b9b6a,#237048);box-shadow:0 3px 0 #15472d}
+button.ghost{background:rgba(255,255,255,.14);box-shadow:none}
+.tease{margin-top:14px;padding:13px 15px;border-radius:12px;background:rgba(255,107,107,.15);
+  border:1px dashed #ff9b9b;font-size:17px;animation:shake .5s}
+@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.ask{margin-top:12px;padding:13px 15px;border-radius:12px;background:rgba(255,216,107,.12);border:1px solid var(--gold)}
+.ask div{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.ok{margin-top:6px;text-align:center}
+.bigletter{display:inline-grid;place-items:center;min-width:130px;height:110px;padding:0 24px;font:800 68px var(--font);
+  color:var(--ink);background:var(--gold);border-radius:16px;box-shadow:0 0 30px rgba(255,216,107,.6);margin:10px 0;animation:pop .6s}
+.solution{position:relative;overflow:hidden;margin:14px auto;max-width:620px;padding:26px 14px 32px;border-radius:16px;
+  background:rgba(255,255,255,.1);border:2px solid var(--gold);text-align:center}
+.solution.plain{padding-bottom:24px}
+.slots{position:relative}
+canvas.drift{position:absolute;left:-60px;bottom:-60px;width:calc(100% + 120px);height:calc(var(--dh,0px) + 84px)}
+.slots{display:flex;flex-direction:column;align-items:center;gap:12px}
+.slotrow{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 28px}
+.slotword{display:flex;gap:4px}
+.slot{width:var(--sw,30px);height:calc(var(--sw,30px)*1.3);border-bottom:4px solid var(--gold);display:grid;place-items:center;
+  font-weight:800;font-size:calc(var(--sw,30px)*.8);color:var(--gold);line-height:1}
+.slot.empty{color:transparent}
+.lbl{display:block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin:4px 0 6px}
+.known{margin:10px 0 14px;padding:12px 10px 10px;border-radius:14px;background:rgba(155,255,107,.08);border:1px solid rgba(155,255,107,.45);text-align:center}
+.kl{font-size:13px;font-weight:700;color:#b7ff9b;margin-bottom:8px}
+.gate{margin-top:14px;padding:14px;border-radius:14px;background:rgba(255,216,107,.1);border:1px solid var(--gold)}
+.gate p{margin:0 0 12px;line-height:1.5}
+#lf{justify-content:center;align-items:center}
+input.lt{flex:none;width:96px;text-align:center;font-size:32px;font-weight:800;text-transform:uppercase;padding:8px}
+.oder{font-size:13px;opacity:.7;letter-spacing:.1em;text-transform:uppercase}
+.alpha{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:4px;max-width:540px;margin:12px auto}
+.alpha div{text-align:center;font:700 14px var(--font)}
+.alpha div span{display:block;padding:4px 0}
+.alpha div span:first-child{background:rgba(255,255,255,.14);border-radius:6px 6px 0 0}
+.alpha div span:last-child{background:var(--gold);color:var(--ink);border-radius:0 0 6px 6px}
+.shift{font-size:26px;font-weight:700;text-align:center;color:var(--gold);margin:10px 0}
+#music{position:fixed;top:34px;left:12px;z-index:20;padding:8px 14px;font-size:15px}
+#reset{background:none;box-shadow:none;color:#9fb0d8;font-size:12px;font-weight:400;display:block;margin:30px auto 0;text-decoration:underline;padding:4px}
+#overlay{position:fixed;inset:0;z-index:50;display:flex;overflow:auto;padding:16px;
+  background:radial-gradient(circle at 50% 30%,#1b3a6b,#070f26 75%)}
+#overlay .card{max-width:580px;width:100%;margin:auto;text-align:center}
+#overlay ul{text-align:left;line-height:1.6;font-size:16px;padding-left:20px}
+
+/* Schneeball an der Scheibe */
+.sb{position:fixed;z-index:40;pointer-events:none;will-change:transform,opacity}
+canvas.sb-ball{position:absolute;left:0;top:0;width:100%;height:100%}
+canvas.sb-chunk{position:absolute;left:50%;top:50%}
+canvas.sb-flash{position:fixed;left:0;top:0;width:100%;height:100%;z-index:39;opacity:0;pointer-events:none;animation:flashk .45s forwards}
+@keyframes flashk{from{opacity:.4}to{opacity:0}}
+
+/* Effekte bei richtiger Antwort */
+.xp-flare{position:fixed;z-index:12;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#fff 0%,rgba(255,236,150,.9) 40%,transparent 70%);animation:flare .9s ease-out forwards}
+@keyframes flare{0%{transform:scale(1);opacity:1}40%{transform:scale(16);opacity:1}100%{transform:scale(24);opacity:0}}
+.xp-dot{position:fixed;z-index:12;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;pointer-events:none;
+  background:#ffe9a0;box-shadow:0 0 8px #fff;animation:dot 1.2s ease-out forwards}
+@keyframes dot{from{transform:translate(0,0) scale(1.4);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+.sleigh{position:fixed;left:0;z-index:12;pointer-events:none;white-space:nowrap;font-size:clamp(34px,10vw,76px);
+  animation:sleighfly 6.5s linear forwards}
+.sleigh .bob{animation:bob 1.1s ease-in-out infinite;text-shadow:0 0 20px rgba(255,230,150,.9)}
+@keyframes sleighfly{from{transform:translateX(105vw)}to{transform:translateX(-120%)}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-16px) rotate(3deg)}}
+.comet{position:fixed;left:0;top:0;z-index:12;pointer-events:none;width:min(60vw,320px);height:5px;border-radius:5px;
+  background:linear-gradient(90deg,transparent,rgba(190,220,255,.5) 60%,#fff);animation:cometfly 1.7s cubic-bezier(.3,0,.7,1) forwards}
+.comet::after{content:"";position:absolute;right:-4px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#fff;
+  box-shadow:0 0 14px 6px rgba(200,225,255,.9),0 0 30px 12px rgba(150,190,255,.5)}
+@keyframes cometfly{from{transform:translate(-360px,var(--y0)) rotate(var(--a))}to{transform:translate(var(--dx),var(--y1)) rotate(var(--a))}}
+.tt-flare{position:fixed;z-index:12;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,247,194,.95) 0%,rgba(255,216,107,.5) 35%,transparent 70%);animation:ttf 3.8s ease-in-out forwards}
+.tt-flare::after{content:"\2726";position:absolute;inset:0;display:grid;place-items:center;font-size:64px;color:#fff;text-shadow:0 0 14px #fff}
+@keyframes ttf{0%{opacity:0;transform:scale(.2)}15%{opacity:1;transform:scale(1.2)}45%{transform:scale(1.7) rotate(20deg)}75%{opacity:1;transform:scale(1.3)}100%{opacity:0;transform:scale(.4)}}
+/* --- verschlanktes Layout --- */
+main{min-height:100vh;min-height:100svh;display:flex;flex-direction:column}
+#app{width:100%}
+#bottom{margin-top:auto;padding-top:18px}
+.collected{background:rgba(9,18,44,.85);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);
+  border:2px solid rgba(255,216,107,.6);border-radius:18px;padding:14px 8px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+.collected .letters{margin:0}
+ul.sf{list-style:none;padding:0;margin:8px 0 16px}
+ul.sf li{position:relative;padding:7px 0 7px 36px;font-size:19px;line-height:1.45;animation:pop .5s}
+ul.sf li::before{content:"\2744\FE0F";position:absolute;left:0;top:6px;font-size:21px}
+ul.sf u{text-decoration-thickness:3px;text-decoration-color:var(--gold);text-underline-offset:4px}
+.boxwrap{position:relative;margin:12px 0;cursor:text}
+.box{display:flex;flex-direction:column;align-items:center;min-height:50px;justify-content:center;padding:4px 0}
+input.ghost{position:absolute;inset:0;width:100%;height:100%;flex:none;opacity:0;font-size:16px;border:0;padding:0;
+  background:transparent;color:transparent;border-radius:0}
+.line{width:100%;min-height:50px;border-bottom:4px solid var(--gold);text-align:center;font-weight:800;font-size:28px;
+  color:var(--gold);letter-spacing:.06em;line-height:1.35;padding-bottom:2px;word-break:break-all}
+.foc .line{border-bottom-color:#fff}
+.box .slot{height:calc(var(--sw,30px)*1.15)}
+.slot.lock{color:#b7ff9b}
+.foc .slot.cur{border-bottom-color:#fff;animation:curs 1s steps(2,start) infinite}
+@keyframes curs{50%{border-bottom-color:var(--gold)}}
+form.entry{display:block}
+form.entry>button{display:block;width:100%}
+.oderic{margin:18px 0 8px;text-align:center;font-size:14px;opacity:.85}
+#grpbox{margin:14px 0 6px}
+#grp{flex:none;display:block;width:150px;margin:8px auto;text-align:center;font-size:24px;font-weight:800}
+.gate p{margin:0 0 6px}
+.hidden{display:none!important}
+
+@media(max-width:560px){
+  main{padding:64px 6px 14vh}
+  .card{padding:18px 14px;border-radius:18px;margin:10px 0}
+  h2{font-size:24px}
+  .steps{gap:4px}.steps b{width:23px;height:23px;font-size:11px}
+  .letters{gap:4px}.letters span{width:25px;height:32px;font-size:18px}
+  ol.hints li{font-size:17px;padding:11px 13px}
+  form{flex-direction:column}
+  input{flex:none;width:100%}
+  form button{width:100%}
+  .alpha{gap:3px}.alpha div{font-size:11px}
+  #moon{width:46px;height:46px;top:11vh}
+  .deco{font-size:24px}
+  #music{top:32px;left:8px;padding:6px 11px;font-size:14px}
+  .bigletter{min-width:120px;height:100px;font-size:60px}
+  math.integral{font-size:1.7em}
+}
+</style>
+</head>
+<body>
+<div id="stars"></div><div id="moon"></div>
+<svg id="forest" viewBox="0 0 1600 300" preserveAspectRatio="xMidYMax slice" xmlns="https://www.w3.org/2000/svg" aria-hidden="true"><defs><radialGradient id="gl"><stop offset="0" stop-color="#fff7c2"/><stop offset="1" stop-color="#ffd86b" stop-opacity="0"/></radialGradient></defs><polygon points="20,109 -22,197 62,197" fill="#08261c"/><circle class="tl" cx="15" cy="187" r="3.2" fill="#ff5a5f" style="animation-delay:1.7s"/><circle class="tl" cx="2" cy="165" r="3.2" fill="#ff9bf0" style="animation-delay:0.4s"/><polygon points="20,162 -47,250 87,250" fill="#08261c"/><circle class="tl" cx="46" cy="209" r="3.2" fill="#ff9bf0" style="animation-delay:1.7s"/><circle class="tl" cx="-5" cy="206" r="3.2" fill="#ff5a5f" style="animation-delay:1.7s"/><polygon points="20,216 -72,304 112,304" fill="#08261c"/><circle class="tl" cx="20" cy="277" r="3.2" fill="#6bd5ff" style="animation-delay:1.4s"/><circle class="tl" cx="67" cy="270" r="3.2" fill="#ffd86b" style="animation-delay:2.4s"/><polygon points="150,131 113,209 187,209" fill="#0d3a29"/><circle class="tl" cx="131" cy="176" r="3.2" fill="#9bff6b" style="animation-delay:2.6s"/><circle class="tl" cx="160" cy="176" r="3.2" fill="#ff5a5f" style="animation-delay:0.4s"/><polygon points="150,178 91,256 209,256" fill="#0d3a29"/><circle class="tl" cx="168" cy="219" r="3.2" fill="#9bff6b" style="animation-delay:1.3s"/><circle class="tl" cx="183" cy="216" r="3.2" fill="#ff9bf0" style="animation-delay:1.7s"/><polygon points="150,226 68,303 232,303" fill="#0d3a29"/><polygon points="245,67 194,174 296,174" fill="#0b3023"/><circle class="tl" cx="236" cy="139" r="3.2" fill="#9bff6b" style="animation-delay:0.2s"/><circle class="tl" cx="220" cy="128" r="3.2" fill="#ff5a5f" style="animation-delay:0.2s"/><polygon points="245,132 163,239 327,239" fill="#0b3023"/><circle class="tl" cx="259" cy="228" r="3.2" fill="#9bff6b" style="animation-delay:0.9s"/><circle class="tl" cx="234" cy="213" r="3.2" fill="#ff5a5f" style="animation-delay:2.8s"/><polygon points="245,197 132,305 358,305" fill="#0b3023"/><circle class="tl" cx="260" cy="270" r="3.2" fill="#ffd86b" style="animation-delay:2.3s"/><circle class="tl" cx="195" cy="258" r="3.2" fill="#9bff6b" style="animation-delay:2.8s"/><polygon points="318,141 283,214 353,214" fill="#0b3023"/><circle class="tl" cx="316" cy="192" r="3.2" fill="#ffd86b" style="animation-delay:2.5s"/><circle class="tl" cx="333" cy="183" r="3.2" fill="#9bff6b" style="animation-delay:3.0s"/><polygon points="318,186 262,259 374,259" fill="#0b3023"/><circle class="tl" cx="310" cy="226" r="3.2" fill="#ff5a5f" style="animation-delay:0.5s"/><circle class="tl" cx="300" cy="226" r="3.2" fill="#9bff6b" style="animation-delay:2.5s"/><polygon points="318,230 241,303 395,303" fill="#0b3023"/><circle class="tl" cx="298" cy="268" r="3.2" fill="#ff9bf0" style="animation-delay:1.1s"/><circle class="tl" cx="324" cy="294" r="3.2" fill="#ff9bf0" style="animation-delay:2.9s"/><polygon points="440,82 392,182 488,182" fill="#0d3a29"/><circle class="tl" cx="414" cy="168" r="3.2" fill="#ff9bf0" style="animation-delay:1.2s"/><circle class="tl" cx="434" cy="132" r="3.2" fill="#9bff6b" style="animation-delay:0.2s"/><polygon points="440,143 363,243 517,243" fill="#0d3a29"/><circle class="tl" cx="413" cy="195" r="3.2" fill="#6bd5ff" style="animation-delay:1.8s"/><circle class="tl" cx="403" cy="214" r="3.2" fill="#ff9bf0" style="animation-delay:0.3s"/><polygon points="440,204 334,304 546,304" fill="#0d3a29"/><circle class="tl" cx="380" cy="289" r="3.2" fill="#ff9bf0" style="animation-delay:1.1s"/><circle class="tl" cx="457" cy="292" r="3.2" fill="#ff9bf0" style="animation-delay:1.1s"/><polygon points="516,104 473,194 559,194" fill="#08261c"/><circle class="tl" cx="515" cy="184" r="3.2" fill="#9bff6b" style="animation-delay:1.5s"/><circle class="tl" cx="495" cy="149" r="3.2" fill="#6bd5ff" style="animation-delay:2.2s"/><polygon points="516,159 447,249 585,249" fill="#08261c"/><circle class="tl" cx="532" cy="220" r="3.2" fill="#ffd86b" style="animation-delay:2.9s"/><circle class="tl" cx="518" cy="205" r="3.2" fill="#ff9bf0" style="animation-delay:2.7s"/><polygon points="516,214 421,304 611,304" fill="#08261c"/><circle class="tl" cx="493" cy="280" r="3.2" fill="#ff5a5f" style="animation-delay:2.1s"/><circle class="tl" cx="489" cy="269" r="3.2" fill="#ffd86b" style="animation-delay:1.1s"/><polygon points="623,143 588,215 658,215" fill="#08261c"/><circle class="tl" cx="635" cy="186" r="3.2" fill="#ffd86b" style="animation-delay:1.8s"/><circle class="tl" cx="635" cy="200" r="3.2" fill="#ffd86b" style="animation-delay:2.4s"/><polygon points="623,187 568,259 678,259" fill="#08261c"/><polygon points="623,231 547,303 699,303" fill="#08261c"/><circle class="tl" cx="598" cy="280" r="3.2" fill="#6bd5ff" style="animation-delay:2.2s"/><circle class="tl" cx="668" cy="289" r="3.2" fill="#9bff6b" style="animation-delay:0.8s"/><polygon points="751,86 704,184 798,184" fill="#0d3a29"/><circle class="tl" cx="742" cy="166" r="3.2" fill="#6bd5ff" style="animation-delay:2.9s"/><circle class="tl" cx="743" cy="140" r="3.2" fill="#ffd86b" style="animation-delay:1.4s"/><polygon points="751,146 676,244 826,244" fill="#0d3a29"/><circle class="tl" cx="749" cy="234" r="3.2" fill="#ff9bf0" style="animation-delay:2.5s"/><circle class="tl" cx="749" cy="219" r="3.2" fill="#ff5a5f" style="animation-delay:2.5s"/><polygon points="751,206 647,304 855,304" fill="#0d3a29"/><circle class="tl" cx="737" cy="282" r="3.2" fill="#ffd86b" style="animation-delay:1.4s"/><circle class="tl" cx="711" cy="285" r="3.2" fill="#6bd5ff" style="animation-delay:0.3s"/><polygon points="834,146 800,217 868,217" fill="#0d3a29"/><circle class="tl" cx="830" cy="208" r="3.2" fill="#ffd86b" style="animation-delay:0.5s"/><circle class="tl" cx="819" cy="183" r="3.2" fill="#9bff6b" style="animation-delay:2.4s"/><polygon points="834,189 780,260 888,260" fill="#0d3a29"/><circle class="tl" cx="855" cy="252" r="3.2" fill="#6bd5ff" style="animation-delay:0.5s"/><circle class="tl" cx="837" cy="222" r="3.2" fill="#ff5a5f" style="animation-delay:1.6s"/><polygon points="834,232 759,303 909,303" fill="#0d3a29"/><polygon points="909,95 864,189 954,189" fill="#0b3023"/><polygon points="909,152 837,247 981,247" fill="#0b3023"/><circle class="tl" cx="941" cy="196" r="3.2" fill="#ffd86b" style="animation-delay:0.9s"/><circle class="tl" cx="887" cy="220" r="3.2" fill="#6bd5ff" style="animation-delay:1.6s"/><polygon points="909,210 810,304 1008,304" fill="#0b3023"/><polygon points="1005,142 970,215 1040,215" fill="#08261c"/><polygon points="1005,186 949,259 1061,259" fill="#08261c"/><circle class="tl" cx="1002" cy="238" r="3.2" fill="#ff9bf0" style="animation-delay:1.3s"/><circle class="tl" cx="1033" cy="235" r="3.2" fill="#ff9bf0" style="animation-delay:0.5s"/><polygon points="1005,230 929,303 1081,303" fill="#08261c"/><circle class="tl" cx="1039" cy="289" r="3.2" fill="#ff9bf0" style="animation-delay:0.0s"/><circle class="tl" cx="1032" cy="269" r="3.2" fill="#9bff6b" style="animation-delay:1.9s"/><polygon points="1090,139 1055,213 1125,213" fill="#08261c"/><circle class="tl" cx="1083" cy="190" r="3.2" fill="#ff9bf0" style="animation-delay:1.4s"/><circle class="tl" cx="1102" cy="202" r="3.2" fill="#ff5a5f" style="animation-delay:0.7s"/><polygon points="1090,184 1033,258 1147,258" fill="#08261c"/><circle class="tl" cx="1109" cy="234" r="3.2" fill="#ff9bf0" style="animation-delay:0.1s"/><circle class="tl" cx="1117" cy="220" r="3.2" fill="#6bd5ff" style="animation-delay:1.8s"/><polygon points="1090,229 1012,303 1168,303" fill="#08261c"/><circle class="tl" cx="1091" cy="286" r="3.2" fill="#9bff6b" style="animation-delay:1.5s"/><circle class="tl" cx="1119" cy="279" r="3.2" fill="#ffd86b" style="animation-delay:2.1s"/><polygon points="1195,96 1150,190 1240,190" fill="#0b3023"/><polygon points="1195,153 1123,247 1267,247" fill="#0b3023"/><polygon points="1195,210 1096,304 1294,304" fill="#0b3023"/><circle class="tl" cx="1189" cy="270" r="3.2" fill="#9bff6b" style="animation-delay:1.3s"/><circle class="tl" cx="1144" cy="263" r="3.2" fill="#ff5a5f" style="animation-delay:0.6s"/><polygon points="1268,45 1212,162 1324,162" fill="#0b3023"/><circle class="tl" cx="1295" cy="106" r="3.2" fill="#6bd5ff" style="animation-delay:0.4s"/><circle class="tl" cx="1294" cy="149" r="3.2" fill="#ffd86b" style="animation-delay:2.2s"/><polygon points="1268,116 1178,234 1358,234" fill="#0b3023"/><circle class="tl" cx="1309" cy="178" r="3.2" fill="#ffd86b" style="animation-delay:0.5s"/><circle class="tl" cx="1261" cy="196" r="3.2" fill="#6bd5ff" style="animation-delay:1.3s"/><polygon points="1268,188 1145,305 1391,305" fill="#0b3023"/><circle class="tl" cx="1208" cy="260" r="3.2" fill="#6bd5ff" style="animation-delay:1.7s"/><circle class="tl" cx="1259" cy="242" r="3.2" fill="#6bd5ff" style="animation-delay:1.6s"/><polygon points="1374,135 1338,211 1410,211" fill="#0b3023"/><circle class="tl" cx="1355" cy="203" r="3.2" fill="#ffd86b" style="animation-delay:2.9s"/><circle class="tl" cx="1357" cy="178" r="3.2" fill="#ff5a5f" style="animation-delay:2.7s"/><polygon points="1374,181 1316,257 1432,257" fill="#0b3023"/><circle class="tl" cx="1392" cy="243" r="3.2" fill="#6bd5ff" style="animation-delay:1.2s"/><circle class="tl" cx="1377" cy="233" r="3.2" fill="#9bff6b" style="animation-delay:2.1s"/><polygon points="1374,227 1294,303 1454,303" fill="#0b3023"/><circle class="tl" cx="1332" cy="285" r="3.2" fill="#9bff6b" style="animation-delay:2.7s"/><circle class="tl" cx="1352" cy="262" r="3.2" fill="#ff5a5f" style="animation-delay:2.4s"/><polygon points="1504,122 1465,204 1543,204" fill="#08261c"/><circle class="tl" cx="1491" cy="169" r="3.2" fill="#ff5a5f" style="animation-delay:1.4s"/><circle class="tl" cx="1496" cy="179" r="3.2" fill="#6bd5ff" style="animation-delay:1.9s"/><polygon points="1504,172 1441,254 1567,254" fill="#08261c"/><circle class="tl" cx="1520" cy="243" r="3.2" fill="#ffd86b" style="animation-delay:0.8s"/><circle class="tl" cx="1480" cy="243" r="3.2" fill="#6bd5ff" style="animation-delay:1.6s"/><polygon points="1504,222 1418,304 1590,304" fill="#08261c"/><circle class="tl" cx="1498" cy="283" r="3.2" fill="#6bd5ff" style="animation-delay:1.0s"/><circle class="tl" cx="1454" cy="268" r="3.2" fill="#ff5a5f" style="animation-delay:0.1s"/><polygon points="1614,70 1563,176 1665,176" fill="#0d3a29"/><circle class="tl" cx="1595" cy="140" r="3.2" fill="#9bff6b" style="animation-delay:0.3s"/><circle class="tl" cx="1633" cy="138" r="3.2" fill="#9bff6b" style="animation-delay:1.6s"/><polygon points="1614,134 1533,240 1695,240" fill="#0d3a29"/><polygon points="1614,199 1503,305 1725,305" fill="#0d3a29"/><polygon points="620,45 564,162 676,162" fill="#0b3023"/><circle class="tl" cx="652" cy="116" r="3.2" fill="#ffd86b" style="animation-delay:1.2s"/><circle class="tl" cx="610" cy="101" r="3.2" fill="#ffd86b" style="animation-delay:0.0s"/><polygon points="620,116 530,234 710,234" fill="#0b3023"/><circle class="tl" cx="661" cy="192" r="3.2" fill="#ff5a5f" style="animation-delay:0.3s"/><circle class="tl" cx="657" cy="215" r="3.2" fill="#6bd5ff" style="animation-delay:1.8s"/><polygon points="620,188 497,305 743,305" fill="#0b3023"/><circle class="tl" cx="553" cy="250" r="3.2" fill="#6bd5ff" style="animation-delay:1.3s"/><circle class="tl" cx="585" cy="291" r="3.2" fill="#ff9bf0" style="animation-delay:1.0s"/><polygon points="960,45 904,162 1016,162" fill="#08261c"/><polygon points="960,116 870,234 1050,234" fill="#08261c"/><circle class="tl" cx="945" cy="169" r="3.2" fill="#9bff6b" style="animation-delay:0.3s"/><circle class="tl" cx="936" cy="204" r="3.2" fill="#ffd86b" style="animation-delay:1.5s"/><polygon points="960,188 837,305 1083,305" fill="#08261c"/><circle class="tl" cx="925" cy="245" r="3.2" fill="#9bff6b" style="animation-delay:1.8s"/><circle class="tl" cx="944" cy="256" r="3.2" fill="#ffd86b" style="animation-delay:0.3s"/><polygon points="800,10 736,143 864,143" fill="#0d3a29"/><polygon points="800,91 698,225 902,225" fill="#0d3a29"/><circle class="tl" cx="848" cy="198" r="3.2" fill="#ff9bf0" style="animation-delay:1.2s"/><circle class="tl" cx="779" cy="210" r="3.2" fill="#ffd86b" style="animation-delay:0.9s"/><polygon points="800,172 660,306 940,306" fill="#0d3a29"/><circle class="tl" cx="740" cy="282" r="3.2" fill="#ff9bf0" style="animation-delay:1.9s"/><circle class="tl" cx="839" cy="281" r="3.2" fill="#ffd86b" style="animation-delay:2.7s"/><g class="ttw"><circle class="ttg" cx="20" cy="117" r="26" fill="url(#gl)"/><polygon class="tt" points="20.0,104.0 23.2,112.6 32.4,113.0 25.2,118.7 27.6,127.5 20.0,122.5 12.4,127.5 14.8,118.7 7.6,113.0 16.8,112.6"/></g><g class="ttw"><circle class="ttg" cx="150" cy="139" r="26" fill="url(#gl)"/><polygon class="tt" points="150.0,126.0 153.2,134.6 162.4,135.0 155.2,140.7 157.6,149.5 150.0,144.5 142.4,149.5 144.8,140.7 137.6,135.0 146.8,134.6"/></g><g class="ttw"><circle class="ttg" cx="245" cy="75" r="26" fill="url(#gl)"/><polygon class="tt" points="245.0,62.0 248.2,70.6 257.4,71.0 250.2,76.7 252.6,85.5 245.0,80.5 237.4,85.5 239.8,76.7 232.6,71.0 241.8,70.6"/></g><g class="ttw"><circle class="ttg" cx="318" cy="149" r="26" fill="url(#gl)"/><polygon class="tt" points="318.0,136.0 321.2,144.6 330.4,145.0 323.2,150.7 325.6,159.5 318.0,154.5 310.4,159.5 312.8,150.7 305.6,145.0 314.8,144.6"/></g><g class="ttw"><circle class="ttg" cx="440" cy="90" r="26" fill="url(#gl)"/><polygon class="tt" points="440.0,77.0 443.2,85.6 452.4,86.0 445.2,91.7 447.6,100.5 440.0,95.5 432.4,100.5 434.8,91.7 427.6,86.0 436.8,85.6"/></g><g class="ttw"><circle class="ttg" cx="516" cy="112" r="26" fill="url(#gl)"/><polygon class="tt" points="516.0,99.0 519.2,107.6 528.4,108.0 521.2,113.7 523.6,122.5 516.0,117.5 508.4,122.5 510.8,113.7 503.6,108.0 512.8,107.6"/></g><g class="ttw"><circle class="ttg" cx="623" cy="151" r="26" fill="url(#gl)"/><polygon class="tt" points="623.0,138.0 626.2,146.6 635.4,147.0 628.2,152.7 630.6,161.5 623.0,156.5 615.4,161.5 617.8,152.7 610.6,147.0 619.8,146.6"/></g><g class="ttw"><circle class="ttg" cx="751" cy="94" r="26" fill="url(#gl)"/><polygon class="tt" points="751.0,81.0 754.2,89.6 763.4,90.0 756.2,95.7 758.6,104.5 751.0,99.5 743.4,104.5 745.8,95.7 738.6,90.0 747.8,89.6"/></g><g class="ttw"><circle class="ttg" cx="834" cy="154" r="26" fill="url(#gl)"/><polygon class="tt" points="834.0,141.0 837.2,149.6 846.4,150.0 839.2,155.7 841.6,164.5 834.0,159.5 826.4,164.5 828.8,155.7 821.6,150.0 830.8,149.6"/></g><g class="ttw"><circle class="ttg" cx="909" cy="103" r="26" fill="url(#gl)"/><polygon class="tt" points="909.0,90.0 912.2,98.6 921.4,99.0 914.2,104.7 916.6,113.5 909.0,108.5 901.4,113.5 903.8,104.7 896.6,99.0 905.8,98.6"/></g><g class="ttw"><circle class="ttg" cx="1005" cy="150" r="26" fill="url(#gl)"/><polygon class="tt" points="1005.0,137.0 1008.2,145.6 1017.4,146.0 1010.2,151.7 1012.6,160.5 1005.0,155.5 997.4,160.5 999.8,151.7 992.6,146.0 1001.8,145.6"/></g><g class="ttw"><circle class="ttg" cx="1090" cy="147" r="26" fill="url(#gl)"/><polygon class="tt" points="1090.0,134.0 1093.2,142.6 1102.4,143.0 1095.2,148.7 1097.6,157.5 1090.0,152.5 1082.4,157.5 1084.8,148.7 1077.6,143.0 1086.8,142.6"/></g><g class="ttw"><circle class="ttg" cx="1195" cy="104" r="26" fill="url(#gl)"/><polygon class="tt" points="1195.0,91.0 1198.2,99.6 1207.4,100.0 1200.2,105.7 1202.6,114.5 1195.0,109.5 1187.4,114.5 1189.8,105.7 1182.6,100.0 1191.8,99.6"/></g><g class="ttw"><circle class="ttg" cx="1268" cy="53" r="26" fill="url(#gl)"/><polygon class="tt" points="1268.0,40.0 1271.2,48.6 1280.4,49.0 1273.2,54.7 1275.6,63.5 1268.0,58.5 1260.4,63.5 1262.8,54.7 1255.6,49.0 1264.8,48.6"/></g><g class="ttw"><circle class="ttg" cx="1374" cy="143" r="26" fill="url(#gl)"/><polygon class="tt" points="1374.0,130.0 1377.2,138.6 1386.4,139.0 1379.2,144.7 1381.6,153.5 1374.0,148.5 1366.4,153.5 1368.8,144.7 1361.6,139.0 1370.8,138.6"/></g><g class="ttw"><circle class="ttg" cx="1504" cy="130" r="26" fill="url(#gl)"/><polygon class="tt" points="1504.0,117.0 1507.2,125.6 1516.4,126.0 1509.2,131.7 1511.6,140.5 1504.0,135.5 1496.4,140.5 1498.8,131.7 1491.6,126.0 1500.8,125.6"/></g><g class="ttw"><circle class="ttg" cx="1614" cy="78" r="26" fill="url(#gl)"/><polygon class="tt" points="1614.0,65.0 1617.2,73.6 1626.4,74.0 1619.2,79.7 1621.6,88.5 1614.0,83.5 1606.4,88.5 1608.8,79.7 1601.6,74.0 1610.8,73.6"/></g><g class="ttw"><circle class="ttg" cx="620" cy="53" r="26" fill="url(#gl)"/><polygon class="tt" points="620.0,40.0 623.2,48.6 632.4,49.0 625.2,54.7 627.6,63.5 620.0,58.5 612.4,63.5 614.8,54.7 607.6,49.0 616.8,48.6"/></g><g class="ttw"><circle class="ttg" cx="960" cy="53" r="26" fill="url(#gl)"/><polygon class="tt" points="960.0,40.0 963.2,48.6 972.4,49.0 965.2,54.7 967.6,63.5 960.0,58.5 952.4,63.5 954.8,54.7 947.6,49.0 956.8,48.6"/></g><g class="ttw"><circle class="ttg" cx="800" cy="18" r="26" fill="url(#gl)"/><polygon class="tt" points="800.0,5.0 803.2,13.6 812.4,14.0 805.2,19.7 807.6,28.5 800.0,23.5 792.4,28.5 794.8,19.7 787.6,14.0 796.8,13.6"/></g></svg>
+<div id="decos"></div>
+<div id="lights"></div>
+<canvas id="snow"></canvas>
+<canvas id="pile"></canvas>
+
+<button id="music" class="ghost hidden" title="Ton an/aus">🔊 Ton an</button>
+
+<div id="overlay">
+  <div class="card">
+    <h1>🎄 Weihnachtliche Schnitzeljagd 🎄</h1>
+    <p>Willkommen! Ihr müsst <b>11 Orte</b> im Haus finden. Zu jedem Ort tragt Ihr hier das <b>Lösungswort</b> oder die <b>Raumnummer</b> ein – oder gebt direkt den <b>geheimen Buchstaben</b> ein, den Ihr vor Ort findet.</p>
+    <ul>
+      <li>Jeder Ort wird mit Hilfe von <b>einem Hinweis</b> gefunden. Bei Bedarf gibt es weitere – falls vorhanden. Tragt das Lösungswort ein, Ihr werdet sehen, ob ihr richtig liegt. </li>
+      <li>Pro Ort sind höchstens <b>5 Fehlversuche</b> erlaubt. ❄️</li>
+      <li>Den geheimen Buchstaben gebt Ihr hier ein – erst dann erscheint der <b>erste Hinweis zum nächsten Ort</b>.</li>
+      <li>Nach dem 11. Ort verrät sich der Code für das große Lösungswort.</li>
+      <li>Im Hintergrund läuft Weihnachtsmusik 🎶 (oben links abschaltbar).</li>
+    </ul>
+    <div id="grpbox">
+      <label for="grp"><b>Eure Gruppennummer:</b></label>
+      <input id="grp" inputmode="numeric" pattern="[0-9]*" maxlength="3" autocomplete="off" placeholder="z. B. 3">
+      <div id="grperr" class="tease hidden"></div>
+    </div>
+    <button id="startbtn" class="alt">🎁 Los geht's!</button>
+    <noscript><p>Bitte JavaScript aktivieren.</p></noscript>
+  </div>
+</div>
+
+<main><h1>🎅 Weihnachtliche Schnitzeljagd</h1><div id="app"></div>
+<div id="bottom"></div>
+<button id="reset">Spielstand zurücksetzen</button></main>
+
+<script>
+const D = {"stations": [{"hints": [{"t": "„Zukunft wird aus Mut gemacht“ – Wo macht uns die Personalabteilung ganz viel Mut?", "k": "hint"}, {"t": "Wo sind die Räumlichkeiten von Personal?", "k": "hint"}, {"t": "Findet den Raum, der auch ein Teams-Hintergrund ist.", "k": "hint"}, {"t": "Berechne das Integral der Funktion f(x) = 1559x:<math display='block' class='integral'><mrow><msubsup><mo>∫<\/mo><mn>0<\/mn><mn>2<\/mn><\/msubsup><mn>1559<\/mn><mi>x<\/mi><mspace width='0.2em'><\/mspace><mi>d<\/mi><mi>x<\/mi><\/mrow><\/math>Das Ergebnis ist die Zahlenkombination, die du eingeben musst.", "k": "emergency"}], "h": [7739782111191347], "reveal": "MzExOA==", "g": [4], "lock": true, "kind": "number", "letter": "J"}, {"hints": [{"t": "Wo heißt es im Haus „Action, Kamera an!“?", "k": "hint"}, {"t": "Wo ist der Raum, in dem die Liveübertragungen stattfinden?", "k": "hint"}, {"t": "Ihr seid ganz in der Nähe.", "k": "hint"}, {"t": "Kunst in Gefahr / Kunstfälschung", "k": "emergency"}], "h": [3430534213989832], "reveal": "MzM0Mg==", "g": [4], "lock": true, "kind": "number", "letter": "R"}, {"hints": [{"t": "Wo kauft man im Ruhrgebiet Getränke?", "k": "hint"}, {"t": "Ich bin froh im Großraumbüro.", "k": "hint"}, {"t": "Meist fotografierter Ort im Haus.", "k": "hint"}, {"t": "Teams-Hintergrund.", "k": "hint"}], "h": [6689008282028806], "reveal": "VHJpbmtoYWxsZQ==", "g": [10], "lock": true, "kind": "word", "letter": "V"}, {"hints": [{"t": "Wo wird man im Konzern ordentlich ver<u>schaukel<\/u>t?", "k": "hint"}], "h": [5170096316150560], "reveal": "U2NoYXVrZWw=", "g": [8], "lock": true, "kind": "word", "letter": "U"}, {"hints": [{"t": "Die Person, die Du hier zuerst begrüßt und zuletzt verabschiedest.", "k": "hint"}], "h": [4627319365083216, 8774666033178899], "reveal": "UGbDtnJ0bmVy", "g": [8], "lock": false, "kind": "word", "letter": "A"}, {"hints": [{"t": "Wo ist unser BaGo-Stern am Versicherungshimmel?", "k": "hint"}, {"t": "Sparkle, Sparkle, little Star...", "k": "hint"}], "h": [5032429473607329, 4395472425723391], "reveal": "RWluZ2FuZ3NiZXJlaWNo", "g": [15], "lock": false, "kind": "word", "letter": "N"}, {"hints": [{"t": "Wo ist hier ein kleines bisschen Paris?", "k": "hint"}, {"t": "Wo würden wir unsere Mona Lisa aufhängen?", "k": "hint"}, {"t": "Wo würde der Rauch der Papstwahl bei uns am Campus aufsteigen?", "k": "hint"}], "h": [4696424949011071, 3036473028034139, 5915011616805726], "reveal": "TG91dnJlIC8gUmF1Y2hlcmhvZiAvIFJhdWNoZXJiZXJlaWNo", "g": null, "lock": false, "kind": "word", "letter": "P"}, {"hints": [{"t": "Wo gibt es unsere legalen Drogen?", "k": "hint"}, {"t": "Wo wird unser liebstes Aufputschmittel mit einem Lächeln serviert?", "k": "hint"}], "h": [8692334696006863], "reveal": "S2FudGluZQ==", "g": [7], "lock": true, "kind": "word", "letter": "U"}, {"hints": [{"t": "Wo wurde die Verbindung zwischen 2 Versicherern geschaffen?", "k": "hint"}, {"t": "Der Übergang von Gewusel zu Leere und stagnierender Luft.", "k": "hint"}], "h": [2068421675494081], "reveal": "QnLDvGNrZQ==", "g": [6], "lock": true, "kind": "word", "letter": "G"}, {"hints": [{"t": "Wo findet Ihr Winnie the Pooh?", "k": "hint"}], "h": [6798836657013623, 7371618987553178], "reveal": "QmllbmVuc3TDtmNrZQ==", "g": [12], "lock": false, "kind": "word", "letter": "R"}, {"hints": [{"t": "Wo hat man im Haus den besten Blick auf den Dom?", "k": "hint"}], "h": [4784256665120554, 648955902905060], "reveal": "UmF1bSBLw7Zsbg==", "g": [4, 4], "lock": false, "kind": "word", "letter": "A"}], "shift": 13, "maxErrors": 5, "teasing": ["Knapp daneben ist auch vorbei – sogar der Weihnachtsmann verläuft sich mal. 🎅", "Autsch! Rudolf hat gerade seine rote Nase gerümpft. 🦌", "Hattet Ihr heute schon Glühwein? Das würde einiges erklären. 🍷", "Die Wichtel in der Werkstatt lachen schon. Und sie haben Popcorn. 🍿", "Fehlversuch Nr. 5! Bevor Ihr komplett einschneit, schaufle ich Euch lieber die Lösung frei. ⛄"], "audio": null, "restartMuted": false, "letterTeasing": ["Hmm, das ist nicht der gesuchte Buchstabe. Schaut vor Ort noch einmal genau hin! 🔍", "Nope! Der Buchstabe versteckt sich hier irgendwo – Lupe raus! 🕵️", "Auch nicht. Vielleicht hat ihn ein Wichtel verlegt? 🧝"], "oddReverse": true, "storageKey": "xmas-hunt-v4"};
+const $ = s => document.querySelector(s);
+const N = D.stations.length, MAX = D.maxErrors;
+
+/* ---------- Hilfsfunktionen (müssen zu generate_site.py passen) ---------- */
+function cyrb53(str, seed = 0) {
+  let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+  for (let i = 0, ch; i < str.length; i++) {
+    ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+}
+function norm(s) {
+  s = s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
+  s = s.replace(/ß/g, 'ss').replace(/ae/g, 'a').replace(/oe/g, 'o').replace(/ue/g, 'u');
+  return s.replace(/[^a-z0-9]/g, '');
+}
+function slotsHtml(text, snow) {                            // Lösung als unterstrichene Felder, Wortabstand bei mehreren Wörtern
+  const rows = String(text).split(' / ');
+  const longest = Math.max(...rows.flatMap(r => r.split(' ')).map(w => w.length));
+  const avail = Math.min(innerWidth - 90, 580);
+  const w = Math.max(16, Math.min(34, Math.floor((avail - (longest - 1) * 4) / longest)));
+  const row = r => '<div class="slotrow">' + r.split(' ').filter(Boolean).map(word =>
+    '<div class="slotword">' + [...word].map(c => `<span class="slot">${c.toUpperCase()}</span>`).join('') + '</div>').join('') + '</div>';
+  const dh = Math.max(0, Math.round(.45 * w - 8));      // Schneehöhe: verdeckt etwa 1/3 der Buchstaben
+  return `<div class="slots" style="--sw:${w}px;--dh:${dh}px">` + rows.map(row).join('<div class="oder">oder</div>')
+    + (snow ? '<canvas class="drift"></canvas>' : '') + '</div>';
+}
+function dec(b) { return new TextDecoder().decode(Uint8Array.from(atob(b), c => c.charCodeAt(0))); }
+function check(i, val) { return D.stations[i].h.includes(cyrb53('xmas|' + i + '|' + norm(val))); }
+function decodeWord() {
+  return D.stations.map(s => String.fromCharCode((s.letter.charCodeAt(0) - 65 - D.shift % 26 + 52) % 26 + 65)).join('');
+}
+
+/* ---------- Spielstand ---------- */
+let S; try { S = JSON.parse(localStorage.getItem(D.storageKey)); } catch (e) {}
+S = S || { cur: 0, st: {} };
+function save() { try { localStorage.setItem(D.storageKey, JSON.stringify(S)); } catch (e) {} }
+function stt(i) { return S.st[i] || (S.st[i] = { att: 0, hints: 1, status: 'open', msg: '', ask: false }); }
+
+/* ---------- Hintergrund: Sterne, Lichterkette, Deko ---------- */
+(function () {
+  const stars = $('#stars');
+  for (let i = 0; i < 110; i++) {
+    const s = document.createElement('i'), z = Math.random() * 2 + 1;
+    s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 60}%;width:${z}px;height:${z}px;animation-delay:${Math.random() * 3}s`;
+    stars.appendChild(s);
+  }
+  const L = $('#lights'), cols = ['#ff5a5f', '#ffd86b', '#6bd5ff', '#9bff6b', '#ff9bf0'];
+  const nL = Math.max(14, Math.round(innerWidth / 24));          // passt sich der Bildschirmbreite an
+  for (let i = 0; i < nL; i++) {
+    const l = document.createElement('i');
+    l.style.background = cols[i % cols.length]; l.style.setProperty('--c', cols[i % cols.length]);
+    l.style.animationDelay = (i % 5) * 0.35 + 's';
+    L.appendChild(l);
+  }
+  const em = ['🎄', '⭐', '🎁', '🔔', '🦌', '⛄', '🍪', '🕯️'], D2 = $('#decos');
+  em.forEach((e, i) => {
+    const d = document.createElement('span'); d.className = 'deco'; d.textContent = e;
+    d.style.left = (4 + i * 12.5) + '%'; d.style.top = (14 + (i % 3) * 9) + '%'; d.style.animationDelay = i * 0.7 + 's';
+    D2.appendChild(d);
+  });
+})();
+
+/* ---------- Schnee (Canvas) ---------- */
+const cv = $('#snow'), cx = cv.getContext('2d'); let W, H; const flakes = [];
+function rs() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+addEventListener('resize', rs); rs();
+function mk(temp) {
+  return { x: Math.random() * W, y: temp ? -10 - Math.random() * H * 0.6 : Math.random() * H,
+    r: 1 + Math.random() * 3, v: 0.4 + Math.random() * 1.1, d: Math.random() * 6.28, temp: !!temp };
+}
+for (let i = 0; i < 90; i++) flakes.push(mk(false));
+function burst(n) { for (let i = 0; i < n; i++) flakes.push(mk(true)); }
+(function tick() {
+  cx.clearRect(0, 0, W, H); cx.fillStyle = 'rgba(255,255,255,.9)';
+  for (let i = flakes.length - 1; i >= 0; i--) {
+    const f = flakes[i];
+    f.y += f.v * (f.temp ? 2.6 : 1); f.d += 0.015; f.x += Math.sin(f.d) * 0.6;
+    cx.beginPath(); cx.arc(f.x, f.y, f.r, 0, 6.283); cx.fill();
+    if (f.y > H + 6) { if (f.temp) flakes.splice(i, 1); else { f.y = -6; f.x = Math.random() * W; } }
+  }
+  requestAnimationFrame(tick);
+})();
+/* ---------- Schneeball gegen die „Bildschirm-Scheibe“ ---------- */
+function paintBall(c, splat) {                        // Ball bzw. Aufschlag auf Canvas (bleibt in jedem Browser weiß)
+  const SZ = 384, k = SZ / 256; c.width = c.height = SZ;
+  const x = c.getContext('2d'); x.scale(k, k);
+  if (!splat) {
+    const g = x.createRadialGradient(95, 88, 8, 128, 124, 112);
+    g.addColorStop(0, '#ffffff'); g.addColorStop(.45, '#f3f7ff'); g.addColorStop(1, '#bdd0ea');
+    x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = 22; x.shadowOffsetY = 10;
+    x.beginPath(); x.arc(128, 120, 106, 0, Math.PI * 2); x.fillStyle = g; x.fill();
+  } else {
+    const g = x.createRadialGradient(128, 128, 0, 128, 128, 120);
+    g.addColorStop(0, 'rgba(255,255,255,.97)'); g.addColorStop(.55, 'rgba(244,249,255,.94)'); g.addColorStop(1, 'rgba(214,228,248,.88)');
+    x.shadowColor = 'rgba(255,255,255,.65)'; x.shadowBlur = 30;
+    x.beginPath();
+    for (let a = 0, first = true; a <= Math.PI * 2 + .05; a += .08) {
+      const r = 104 * (1 + .03 * Math.sin(3 * a + 1) + .025 * Math.sin(5 * a + 2) + .015 * Math.sin(7 * a));
+      const px = 128 + r * Math.cos(a), py = 128 + r * Math.sin(a);
+      if (first) { x.moveTo(px, py); first = false; } else x.lineTo(px, py);
+    }
+    x.closePath(); x.fillStyle = g; x.fill();
+  }
+}
+function chunkCanvas() {
+  const c = document.createElement('canvas'); c.width = c.height = 32; c.className = 'sb-chunk';
+  const x = c.getContext('2d'), g = x.createRadialGradient(16, 16, 2, 16, 16, 15);
+  g.addColorStop(0, '#fff'); g.addColorStop(1, 'rgba(235,243,255,.9)');
+  x.shadowColor = 'rgba(255,255,255,.8)'; x.shadowBlur = 5; x.fillStyle = g;
+  x.beginPath(); x.arc(16, 16, 11, 0, Math.PI * 2); x.fill();
+  return c;
+}
+function flashCanvas() {
+  const c = document.createElement('canvas'); c.width = c.height = 2; c.className = 'sb-flash';
+  const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 2, 2);
+  return c;
+}
+const BALL_SIZE = 0.88;   // Durchmesser beim Aufprall = 88 % der kürzeren Bildschirmseite
+function snowball() {
+  const W = innerWidth, H = innerHeight, d = Math.round(Math.min(W, H) * BALL_SIZE);
+  const ox = (Math.random() * 2 - 1) * Math.max(0, (W - d) / 2) * 0.8;   // Aufprallpunkt (bleibt im Bild)
+  const oy = (Math.random() * 2 - 1) * Math.max(0, (H - d) / 2) * 0.8;
+  const wrap = document.createElement('div'); wrap.className = 'sb';
+  wrap.style.cssText = `width:${d}px;height:${d}px;left:${(W - d) / 2}px;top:${(H - d) / 2}px;opacity:0`;
+  const ball = document.createElement('canvas'); ball.className = 'sb-ball'; paintBall(ball, false); wrap.appendChild(ball);
+  document.body.appendChild(wrap);
+  const sx = ox * 0.15, sy = -H * 0.08, S0 = 0.025, T_FLY = 850, T_HOLD = 1500, T_SLIDE = 2400;
+  const chunks = []; let hit = false; const t0 = performance.now();
+  const place = (x, y, scx, scy, o) => { wrap.style.transform = `translate(${x}px,${y}px) scale(${scx},${scy})`; wrap.style.opacity = o; };
+  function impact() {
+    paintBall(ball, true);
+    const fl = flashCanvas(); document.body.appendChild(fl);
+    setTimeout(() => fl.remove(), 500);
+    const m = document.querySelector('main');
+    if (m) { m.classList.remove('shake'); void m.offsetWidth; m.classList.add('shake'); setTimeout(() => m.classList.remove('shake'), 350); }
+    for (let k = 0; k < 18; k++) {                   // Schneebrocken spritzen weg
+      const s = 8 + Math.random() * 26, a = Math.random() * 6.283;
+      const el = chunkCanvas();
+      el.style.cssText = `width:${s}px;height:${s}px;margin:${-s / 2}px 0 0 ${-s / 2}px`;
+      wrap.appendChild(el);
+      chunks.push({ el, a, r0: d * .3, r1: d * (.5 + Math.random() * .25), dur: 600 + Math.random() * 600 });
+    }
+  }
+  (function frame(now) {
+    const t = now - t0;
+    if (t < T_FLY) {                                  // Flug: Perspektive, Entfernung nimmt gleichmäßig ab
+      const u = t / T_FLY, sc = 1 / (1 / S0 - (1 / S0 - 1) * u), p = (sc - S0) / (1 - S0);
+      place(sx + (ox - sx) * p, sy + (oy - sy) * p - Math.sin(Math.PI * p) * H * .1, sc, sc, Math.min(1, u * 10));
+    } else {
+      if (!hit) { hit = true; impact(); }
+      const u = t - T_FLY;
+      let sq = 1; if (u < 300) sq = u < 120 ? .92 + .14 * (u / 120) : 1.06 - .06 * ((u - 120) / 180);
+      ball.style.transform = `scale(${sq})`;
+      let y = oy, o = 1, scy = 1;
+      if (u > T_HOLD) { const v = Math.min(1, (u - T_HOLD) / T_SLIDE); y = oy + H * .35 * v * v; o = 1 - v; scy = 1 + .15 * v; }
+      place(ox, y, 1, scy, o);                        // klebt kurz, rutscht dann die Scheibe hinunter
+      for (const c of chunks) {
+        const p = Math.min(1, u / c.dur), q = 1 - (1 - p) * (1 - p), r = c.r0 + (c.r1 - c.r0) * q;
+        c.el.style.transform = `translate(${Math.cos(c.a) * r}px,${Math.sin(c.a) * r + 30 * p}px) scale(${1 - .5 * p})`;
+        c.el.style.opacity = 1 - p;
+      }
+      if (u > T_HOLD + T_SLIDE) { wrap.remove(); return; }
+    }
+    requestAnimationFrame(frame);
+  })(t0);
+}
+
+/* ---------- Effekte bei richtiger Antwort (zufällig abwechselnd) ---------- */
+function fxEl(cls, css) {
+  const e = document.createElement('div'); e.className = cls; if (css) e.style.cssText = css;
+  document.body.appendChild(e); return e;
+}
+const FX = {
+  lights() {                                          // Lichterkette blinkt auffällig
+    const L = $('#lights'); L.classList.add('flash'); setTimeout(() => L.classList.remove('flash'), 3400);
+  },
+  stars() {                                           // einzelne Sterne explodieren
+    const all = [...document.querySelectorAll('#stars i')].filter(s => {
+      const r = s.getBoundingClientRect(); return r.top > 34 && r.left > 4 && r.right < innerWidth - 4;
+    }).sort(() => Math.random() - .5);
+    all.slice(0, 5).forEach((s, k) => setTimeout(() => {
+      const r = s.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+      s.style.visibility = 'hidden'; setTimeout(() => { s.style.visibility = ''; }, 2600);
+      const f = fxEl('xp-flare', `left:${x}px;top:${y}px`); f.addEventListener('animationend', () => f.remove());
+      for (let n = 0; n < 14; n++) {
+        const a = Math.PI * 2 * n / 14 + Math.random() * .4, dist = 50 + Math.random() * 80;
+        const p = fxEl('xp-dot', `left:${x}px;top:${y}px;--dx:${Math.cos(a) * dist}px;--dy:${Math.sin(a) * dist}px;animation-duration:${(.9 + Math.random() * .7).toFixed(2)}s`);
+        p.addEventListener('animationend', () => p.remove());
+      }
+    }, k * 450));
+  },
+  sleigh() {                                          // Schlitten des Weihnachtsmanns saust über den Himmel
+    const w = fxEl('sleigh', `top:${(8 + Math.random() * 14).toFixed(0)}vh`);
+    w.innerHTML = '<div class="bob">🦌🦌🛷🎅 ✨✨</div>';
+    w.addEventListener('animationend', e => { if (e.target === w) w.remove(); });
+  },
+  comet() {                                           // Komet zieht über den Himmel
+    const W = innerWidth, H = innerHeight, ang = 18, y0 = H * (.04 + Math.random() * .2);
+    const dy = (W + 460) * Math.tan(ang * Math.PI / 180);
+    const c = fxEl('comet', `--y0:${y0}px;--y1:${y0 + dy}px;--dx:${W + 120}px;--a:${ang}deg`);
+    c.addEventListener('animationend', () => c.remove());
+  },
+  tree() {                                            // Spitze eines Weihnachtsbaums leuchtet auf
+    const vis = [...document.querySelectorAll('.ttw')].filter(g => {
+      const r = g.querySelector('.tt').getBoundingClientRect();
+      return r.left > 10 && r.right < innerWidth - 10 && r.top > 40 && r.bottom < innerHeight;
+    });
+    if (!vis.length) return FX.lights();
+    const g = vis[Math.floor(Math.random() * vis.length)], r = g.querySelector('.tt').getBoundingClientRect();
+    g.classList.add('on'); setTimeout(() => g.classList.remove('on'), 3900);
+    const f = fxEl('tt-flare', `left:${r.left + r.width / 2}px;top:${r.top + r.height / 2}px`);
+    f.addEventListener('animationend', () => f.remove());
+  }
+};
+let fxBag = [], fxLast = null;
+function celebrate() {                                // jeder Effekt kommt dran, bevor sich einer wiederholt
+  if (!fxBag.length) {
+    fxBag = Object.keys(FX).sort(() => Math.random() - .5);
+    if (fxBag[fxBag.length - 1] === fxLast) fxBag.unshift(fxBag.pop());
+  }
+  fxLast = fxBag.pop();
+  try { FX[fxLast](); } catch (e) {}
+}
+
+/* Schneehaufen am unteren Rand – auf Canvas gezeichnet, damit automatische Dunkelmodi (Handy-Browser) ihn nicht schwärzen */
+const pileC = $('#pile'), pileX = pileC.getContext('2d');
+let pileH = 0, pileTo = 0, pileRaf = 0;
+function drawPile() {
+  const dpr = pileC.width / innerWidth, w = pileC.width, h = pileC.height;
+  pileX.clearRect(0, 0, w, h);
+  if (pileH <= 0.5) return;
+  const top = h - pileH * dpr;
+  pileX.fillStyle = '#fff'; pileX.shadowColor = 'rgba(255,255,255,.55)'; pileX.shadowBlur = 24 * dpr;
+  pileX.beginPath(); pileX.moveTo(0, h);
+  for (let x = 0; x <= w; x += 6) {
+    const px = x / dpr;
+    pileX.lineTo(x, top - (8 + 5 * Math.sin(px / 23) + 4 * Math.sin(px / 9 + 1.3) + 3 * Math.sin(px / 61)) * dpr);
+  }
+  pileX.lineTo(w, h); pileX.closePath(); pileX.fill();
+}
+function sizePile() {
+  const dpr = Math.min(2, devicePixelRatio || 1);
+  pileC.width = Math.round(innerWidth * dpr); pileC.height = Math.round(innerHeight * .4 * dpr); drawPile();
+}
+addEventListener('resize', sizePile); sizePile();
+function setPile(att) {
+  pileTo = Math.min(att, MAX) * .055 * innerHeight;
+  cancelAnimationFrame(pileRaf);
+  (function step() {
+    const d = pileTo - pileH;
+    if (Math.abs(d) < .6) { pileH = pileTo; drawPile(); return; }
+    pileH += d * .06; drawPile(); pileRaf = requestAnimationFrame(step);
+  })();
+}
+function paintDrift(c) {                              // Schneewehe über dem Lösungswort
+  const dpr = Math.min(2, devicePixelRatio || 1), w = c.clientWidth, h = c.clientHeight; if (!w || !h) return;
+  c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+  const x = c.getContext('2d'); x.scale(dpr, dpr); x.globalAlpha = .97; x.fillStyle = '#fff';
+  x.beginPath(); x.moveTo(0, h);
+  for (let px = 0; px <= w; px += 4) x.lineTo(px, 14 + 5 * Math.sin(px / 14) + 4 * Math.sin(px / 6 + 1));
+  x.lineTo(w, h); x.closePath(); x.fill();
+}
+
+/* ---------- Musik ---------- */
+const Music = {
+  on: false, ctx: null, timer: null, audio: null,
+  // Jingle Bells (gemeinfrei): [Frequenz, Beats]
+  mel: [[329.63,1],[329.63,1],[329.63,2],[329.63,1],[329.63,1],[329.63,2],[329.63,1],[392,1],[261.63,1.5],[293.66,.5],[329.63,4],
+        [349.23,1],[349.23,1],[349.23,1.5],[349.23,.5],[349.23,1],[329.63,1],[329.63,1],[329.63,.5],[329.63,.5],[329.63,1],[293.66,1],[293.66,1],[329.63,1],[293.66,2],[392,2]],
+  start() {
+    this.on = true;
+    if (D.audio) {
+      if (!this.audio) { this.audio = new Audio(D.audio); this.audio.loop = true; this.audio.volume = .5; }
+      this.audio.play().catch(() => {});
+    } else {
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      this.ctx = new AC(); this.master = this.ctx.createGain(); this.master.gain.value = .13; this.master.connect(this.ctx.destination);
+      this.loop();
+    }
+    $('#music').textContent = '🔊 Ton an';
+  },
+  restart(force) {                       // Musik von vorne starten (bei jedem neuen Ort)
+    const was = this.on;
+    if (was) this.stop();
+    if (was || force) { if (this.audio) this.audio.currentTime = 0; this.start(); }
+  },
+  loop() {
+    const c = this.ctx, beat = 60 / 128; let t = c.currentTime + .1;
+    for (const [f, b] of this.mel) {
+      const d = b * beat;
+      [[f, 'triangle', .55], [f * 2, 'sine', .18]].forEach(([fr, ty, v]) => {
+        const o = c.createOscillator(), g = c.createGain(); o.type = ty; o.frequency.value = fr;
+        g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .02);
+        g.gain.exponentialRampToValueAtTime(.0001, t + d * .95);
+        o.connect(g); g.connect(this.master); o.start(t); o.stop(t + d);
+      });
+      t += d;
+    }
+    const total = (t - c.currentTime) + 1.2;
+    this.timer = setTimeout(() => { if (this.on && this.ctx === c) this.loop(); }, total * 1000 - 200);
+  },
+  stop() {
+    this.on = false; clearTimeout(this.timer);
+    if (this.audio) this.audio.pause();
+    if (this.ctx) { this.ctx.close(); this.ctx = null; }
+    $('#music').textContent = '🔇 Ton aus';
+  }
+};
+$('#music').onclick = () => (Music.on ? Music.stop() : Music.start());
+
+/* ---------- Eingabe über Platzhalter-Felder ---------- */
+const isAl = c => /[\p{L}\p{N}]/u.test(c);
+const baseCh = c => c.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const alnum = s => [...s].filter(isAl);
+function slotSize(longest) {
+  const avail = Math.min(innerWidth - 90, 580);
+  return Math.max(16, Math.min(34, Math.floor((avail - (longest - 1) * 4) / longest)));
+}
+function entryHtml(id, cfg) {
+  return `<div class="boxwrap" id="${id}w"><div class="box" id="${id}b"></div>
+    <input id="${id}" class="ghost" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Eingabe"
+      autocapitalize="${cfg.caps ? 'characters' : 'off'}" ${cfg.num ? 'inputmode="numeric" pattern="[0-9]*"' : ''}></div>`;
+}
+function bindEntry(id, cfg) {
+  const inp = $('#' + id), box = $('#' + id + 'b'), wrap = $('#' + id + 'w');
+  const lock = cfg.locked || [], groups = cfg.line ? null : cfg.g;
+  const n = groups ? groups.reduce((x, y) => x + y, 0) : 0;
+  const freeCount = n - lock.filter(Boolean).length;
+  const max = cfg.max != null ? cfg.max : freeCount + 3;
+  const ok = c => cfg.num ? /\d/.test(c) : (cfg.line ? (isAl(c) || c === ' ') : isAl(c));
+  const typed = () => [...inp.value].filter(ok);
+  function compose() {                              // Zeichen je Feld; gesperrte (richtige) Stellen sind vorbelegt
+    const t = typed(), out = []; let ti = 0;
+    for (let k = 0; k < n; k++) {
+      if (lock[k]) out.push({ c: lock[k], lock: true });
+      else if (ti < t.length) out.push({ c: t[ti++] });
+      else out.push({ c: '' });
+    }
+    while (ti < t.length) out.push({ c: t[ti++] });
+    return out;
+  }
+  cfg.get = () => cfg.line ? typed().join('').trim() : compose().map(x => x.c).join('');
+  cfg.chars = () => compose().map(x => x.c);
+  function paint() {
+    const foc = document.activeElement === inp;
+    wrap.classList.toggle('foc', foc);
+    if (cfg.line) { box.innerHTML = `<div class="line">${typed().join('') || '&nbsp;'}</div>`; return; }
+    const cs = compose(), sizes = groups.slice(), extra = cs.length - n;
+    if (extra > 0) sizes[sizes.length - 1] += extra;
+    const sw = cfg.sw || slotSize(Math.max(...sizes));
+    let idx = 0, curSet = false, html = `<div class="slotrow" style="--sw:${sw}px">`;
+    sizes.forEach(sz => {
+      html += '<div class="slotword">';
+      for (let k = 0; k < sz; k++, idx++) {
+        const x = cs[idx], cur = foc && !curSet && !x.c; if (cur) curSet = true;
+        html += `<span class="slot${x.lock ? ' lock' : ''}${cur ? ' cur' : ''}">${x.c ? x.c.toUpperCase() : '&nbsp;'}</span>`;
+      }
+      html += '</div>';
+    });
+    box.innerHTML = html + '</div>';
+  }
+  inp.addEventListener('input', () => { inp.value = typed().slice(0, max).join(''); paint(); });
+  inp.addEventListener('focus', paint); inp.addEventListener('blur', paint);
+  paint();
+  return cfg;
+}
+function focusMaybe(el) { if (el && !matchMedia('(pointer:coarse)').matches) el.focus({ preventScroll: true }); }
+
+function entryCfg(i, st) {
+  const s = D.stations[i];
+  if (!s.g) return { line: true, max: 30 };
+  const locked = [];
+  if (s.lock && st.known) alnum(dec(s.reveal)).forEach((c, k) => { if (st.known[k]) locked[k] = c.toUpperCase(); });
+  return { g: s.g, num: s.kind === 'number', locked };
+}
+function updateKnown(i, chars, st) {                // richtige Stellen merken, falsche verschwinden
+  const s = D.stations[i]; if (!s.lock) return;
+  const canon = alnum(dec(s.reveal)); st.known = st.known || [];
+  chars.forEach((c, k) => { if (k < canon.length && c && baseCh(c) === baseCh(canon[k])) st.known[k] = 1; });
+}
+
+/* ---------- Anzeige ---------- */
+let ENT = null, LENT = null, LOENT = null, FENT = null, pendingScroll = false;
+// Reihenfolge der Orte: gerade Gruppen vorwärts, ungerade rückwärts (siehe REVERSE_FOR_ODD_GROUPS)
+const ORDER = () => D.stations.map((_, k) => S.rev ? N - 1 - k : k);
+
+function paintBottom() {                            // gesammelte Buchstaben ganz unten – an ihrer Stelle im Lösungswort
+  const seen = new Set(ORDER().slice(0, S.cur));
+  $('#bottom').innerHTML = `<div class="collected"><div class="letters">${
+    D.stations.map((x, j) => `<span>${seen.has(j) ? x.letter : ''}</span>`).join('')}</div></div>`;
+}
+
+function render() {
+  paintBottom();
+  if (S.cur >= N) return renderFinal();
+  const pos = S.cur, i = ORDER()[pos], st = stt(i), s = D.stations[i], app = $('#app');
+  const open = st.status === 'open', last = pos + 1 >= N, isNum = s.kind === 'number';
+  setPile(st.att);
+
+  const hintsHtml = '<ul class="sf">' + s.hints.slice(0, st.hints).map(h => `<li>${h.t}</li>`).join('') + '</ul>';
+  const att = '❄️'.repeat(st.att) + '◌'.repeat(MAX - st.att);
+  const nextTxt = last ? 'Zum großen Finale' : `Weiter zu Ort ${pos + 2}`;
+
+  // geheimer Buchstabe -> schaltet den nächsten Ort frei
+  const gate = `<div class="gate"><p>An diesem Ort wartet ein <b>geheimer Buchstabe</b> auf Euch. ${last
+      ? 'Um das <b>große Finale</b> freizuschalten, gebt ihn hier ein:'
+      : `Um den <b>nächsten Ort ${pos + 2}</b> zu finden, gebt ihn hier ein:`}</p>
+    <form id="lf" class="entry">${entryHtml('lt', { caps: true })}<button class="alt">Weiter</button></form>
+    ${st.lmsg ? `<div class="tease">${st.lmsg}</div>` : ''}</div>`;
+
+  let body = '';
+  if (open) {
+    const more = st.hints < s.hints.length;
+    let notes = `<div class="att">Fehlversuche&nbsp; ${att}</div>`;
+    if (st.msg) notes += `<div class="tease">${st.msg}</div>`;
+    if (st.msg && st.ask && more) {
+      notes += `<div class="ask">💡 Möchtet Ihr einen <b>weiteren Hinweis</b>?
+        <div><button class="alt" data-a="yes">Ja, bitte</button><button class="ghost" data-a="no">Nein, wir versuchen es nochmal</button></div></div>`;
+    } else if (st.msg && !more) {
+      notes += `<div class="info" style="margin-top:10px">${s.hints.length === 1 ? 'Zu diesem Ort gibt es nur diesen einen Hinweis.' : 'Alle Hinweise sind bereits freigeschaltet.'}</div>`;
+    }
+    body = `${notes}
+      <form id="f" class="entry"><span class="lbl">${isNum ? 'Raumnummer' : 'Lösungswort'}</span>${entryHtml('ans', { num: isNum })}<button>Prüfen</button></form>
+      <div class="oderic">… oder gebt den geheimen Buchstaben, den Ihr am Ort gefunden habt, ein:</div>
+      <form id="lof" class="entry">${entryHtml('lo', { caps: true })}<button>Prüfen</button></form>`;
+  } else if (st.status === 'solved' && st.via === 'letter') {
+    body = `<div class="ok"><h2>Richtig!</h2><div class="solution plain">${slotsHtml(dec(s.reveal))}</div>
+      <p>Der geheime Buchstabe stimmt – weiter geht's!</p><button class="alt" id="next">${nextTxt} ➜</button></div>`;
+  } else if (st.status === 'solved') {
+    body = `<div class="ok"><h2>Richtig!</h2><div class="solution plain">${slotsHtml(dec(s.reveal))}</div>${gate}</div>`;
+  } else {
+    body = `<div class="ok"><h2>Eingeschneit!</h2>Alle Versuche sind verbraucht – hier ist die Lösung (leider schon etwas im Schnee versunken):
+      <div class="solution">${slotsHtml(dec(s.reveal), true)}</div>${gate}</div>`;
+  }
+
+  app.innerHTML = `<section class="card"><h2>Ort ${pos + 1} <small>von ${N}</small></h2>${hintsHtml}${body}</section>`;
+
+  app.querySelectorAll('canvas.drift').forEach(paintDrift);
+  ENT = LENT = LOENT = null;
+  if ($('#f')) {
+    ENT = bindEntry('ans', entryCfg(i, st));
+    $('#f').onsubmit = e => { e.preventDefault(); submitText(); };
+    LOENT = bindEntry('lo', { g: [1], max: 1, caps: true, sw: 48 });
+    $('#lof').onsubmit = e => { e.preventDefault(); submitLetter(); };
+    focusMaybe($('#ans'));
+  }
+  if ($('#lf')) {
+    LENT = bindEntry('lt', { g: [1], max: 1, caps: true, sw: 58 });
+    $('#lf').onsubmit = e => { e.preventDefault(); unlock(); };
+    focusMaybe($('#lt'));
+  }
+  const nb = $('#next'); if (nb) nb.onclick = advance;
+  app.querySelectorAll('[data-a]').forEach(b => b.onclick = () => {
+    if (b.dataset.a === 'yes') st.hints = Math.min(st.hints + 1, s.hints.length);
+    st.ask = false; st.msg = b.dataset.a === 'yes' ? '' : st.msg; save(); render();
+  });
+  if (pendingScroll) {
+    pendingScroll = false;
+    const t = $('.tease'); if (t) t.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+}
+
+function resolve(correct, onWrong, via) {
+  const i = ORDER()[S.cur], st = stt(i), s = D.stations[i];
+  if (correct) {
+    st.status = 'solved'; st.via = via || 'word'; st.msg = ''; st.ask = false; burst(40); celebrate();
+  } else {
+    st.att++; burst(60 + st.att * 25); snowball();
+    if (onWrong) onWrong(st);
+    st.msg = D.teasing[Math.min(st.att - 1, D.teasing.length - 1)];
+    st.ask = st.hints < s.hints.length;
+    if (st.att >= MAX) { st.status = 'revealed'; st.ask = false; }
+    pendingScroll = true;
+  }
+  save(); render();
+}
+function submitText() {
+  if (!ENT) return;
+  const v = ENT.get(); if (!v.trim()) return;
+  const i = ORDER()[S.cur], chars = ENT.chars();
+  resolve(check(i, v), st => updateKnown(i, chars, st), 'word');
+}
+function submitLetter() {                            // geheimer Buchstabe direkt am Ort eingegeben
+  if (!LOENT) return;
+  const v = LOENT.get(); if (!v) return;
+  const i = ORDER()[S.cur];
+  resolve(norm(v) === norm(D.stations[i].letter), null, 'letter');
+}
+
+function advance() {                                 // zum nächsten Ort bzw. zum Finale
+  S.cur += 1;
+  Music.restart(D.restartMuted); burst(60); save();
+  window.scrollTo({ top: 0, behavior: 'smooth' }); setPile(0); render();
+}
+function unlock() {                                  // geheimer Buchstabe -> nächster Ort / Finale
+  const i = ORDER()[S.cur], st = stt(i), v = LENT ? LENT.get() : ''; if (!v) return;
+  if (norm(v) === norm(D.stations[i].letter)) {
+    st.letterOk = true; st.lmsg = ''; advance();
+  } else {
+    st.lcount = (st.lcount || 0) + 1;
+    st.lmsg = D.letterTeasing[(st.lcount - 1) % D.letterTeasing.length];
+    burst(30); save(); render();
+  }
+}
+
+function renderFinal() {
+  setPile(0);
+  const shift = D.shift % 26, A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const alpha = [...A].map((c, k) => `<div><span>${c}</span><span>${A[(k + shift) % 26]}</span></div>`).join('');
+  const solved = S.solved;
+  $('#app').innerHTML = `<section class="card">
+    <h2>Alle ${N} Orte gefunden!</h2>
+    <p>Ihr habt alle Buchstaben gesammelt – der Geheimtext steht ganz unten auf der Seite.</p>
+    <p>Und jetzt verrate ich Euch den <b>Code</b>: Jeder Buchstabe wurde im Alphabet um <b>${shift} Stellen</b> verschoben.</p>
+    <div class="shift">A = ${A[shift % 26]}, &nbsp;B = ${A[(1 + shift) % 26]}, &nbsp;C = ${A[(2 + shift) % 26]} …</div>
+    <p style="font-size:14px;opacity:.85;text-align:center">Obere Reihe: Klartext – untere Reihe: Geheimtext. Sucht Eure Buchstaben in der <b>unteren</b> Reihe und lest oben den echten Buchstaben ab.</p>
+    <div class="alpha">${alpha}</div>
+    ${solved ? '' : `<form id="ff" class="entry"><span class="lbl">Lösungswort</span>${entryHtml('fans', {})}<button>Prüfen</button></form>
+    <div id="fmsg"></div>
+    <p style="text-align:center"><button type="button" class="ghost" id="showsol">Wir geben auf – Lösung anzeigen</button></p>`}
+    <div id="finalsol">${solved ? finalSolHtml() : ''}</div>
+  </section>`;
+  if (!solved) {
+    FENT = bindEntry('fans', { g: [N] });
+    $('#ff').onsubmit = e => {
+      e.preventDefault();
+      if (!FENT.get()) return;
+      if (norm(FENT.get()) === norm(decodeWord())) { finish(); }
+      else { $('#fmsg').innerHTML = '<div class="tease">Noch nicht ganz – schaut nochmal genau auf die Tabelle! 🧐</div>'; burst(40); }
+    };
+    $('#showsol').onclick = finish;
+    focusMaybe($('#fans'));
+  }
+}
+function finalSolHtml() {
+  return `<div class="ok"><h2>🎄 Frohe Weihnachten! 🎄</h2>Das Lösungswort lautet:
+    <div class="solution plain" style="border-color:#9bff6b">${slotsHtml(decodeWord())}</div>
+    Danke fürs Mitmachen und viel Spaß beim Weiterfeiern! 🎁</div>`;
+}
+function finish() { S.solved = true; save(); burst(200); celebrate(); renderFinal(); }
+
+/* ---------- Start ---------- */
+const started = S.cur > 0 || Object.keys(S.st).length > 0;
+if (S.group) $('#grp').value = S.group;
+if (started) {                                        // Spiel läuft schon: Gruppe nicht mehr änderbar
+  $('#grpbox').innerHTML = `<p><b>Gruppe ${S.group || ''}</b></p>`;
+  $('#startbtn').textContent = '🎁 Weiterspielen';
+}
+$('#startbtn').onclick = () => {
+  if (!started) {
+    const g = parseInt($('#grp').value, 10);
+    if (!(g >= 1 && g <= 999)) {
+      const e = $('#grperr'); e.textContent = 'Bitte gebt zuerst Eure Gruppennummer ein (eine Zahl).'; e.classList.remove('hidden');
+      $('#grp').focus(); return;
+    }
+    S.group = g; S.rev = !!D.oddReverse && g % 2 === 1; save();   // ungerade Gruppen: rückwärts
+  }
+  $('#overlay').classList.add('hidden'); $('#music').classList.remove('hidden');
+  Music.start(); render();
+};
+$('#reset').onclick = () => {
+  if (confirm('Spielstand wirklich löschen und neu beginnen?')) {
+    try { localStorage.removeItem(D.storageKey); } catch (e) {}
+    location.reload();
+  }
+};
+</script>
+</body>
+</html>
